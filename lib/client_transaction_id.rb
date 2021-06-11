@@ -1,9 +1,10 @@
 module ClientTransactionId
-  attr_accessor :cl_trid_prefix, :cl_trid
+  attr_accessor :cl_trid_prefix, :cl_trid, :schema_path
 
   def initialize(args = {})
     self.cl_trid = args[:cl_trid]
     self.cl_trid_prefix = args[:cl_trid_prefix]
+	self.schema_path = args[:schema_path]
   end
 
   def clTRID
