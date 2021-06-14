@@ -4,6 +4,9 @@ class EppXml
   class Domain
     include ClientTransactionId
 
+		DEFAULT_SCHEMA_PREFIX = 'domain-eis'.freeze
+		DEFAULT_SCHEMA_VERSION = '1.0'.freeze
+
     XMLNS         = 'https://epp.tld.ee/schema/epp-ee-1.0.xsd'.freeze
 
     XMLNS_SECDNS  = 'urn:ietf:params:xml:ns:secDNS-1.1'.freeze
@@ -119,9 +122,9 @@ class EppXml
     private
 
     def generate_path
-      # XMLNS_DOMAIN  = 'https://epp.tld.ee/schema/domain-eis-1.0.xsd'.freeze
-      prefix = schema_prefix || 'domain-eis'
-      version = schema_version || '1.0'
+      prefix = schema_prefix || DEFAULT_SCHEMA_PREFIX
+      version = schema_version || DEFAULT_SCHEMA_VERSION
+
       "https://epp.tld.ee/schema/#{prefix}-#{version}.xsd"
     end
 
