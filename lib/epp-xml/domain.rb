@@ -6,8 +6,6 @@ class EppXml
 
     XMLNS         = 'https://epp.tld.ee/schema/epp-ee-1.0.xsd'.freeze
 
-    XMLNS_DOMAIN  = schema_path
-
     XMLNS_SECDNS  = 'urn:ietf:params:xml:ns:secDNS-1.1'.freeze
 
     XMLNS_EIS     = 'https://epp.tld.ee/schema/eis-1.0.xsd'.freeze
@@ -31,7 +29,7 @@ class EppXml
       xml.epp('xmlns' => XMLNS) do
         xml.command do
           xml.create do
-            xml.tag!('domain:create', 'xmlns:domain' => XMLNS_DOMAIN) do
+            xml.tag!('domain:create', 'xmlns:domain' => generate_path) do
               EppXml.generate_xml_from_hash(xml_params, xml, 'domain:')
             end
           end
@@ -59,7 +57,7 @@ class EppXml
       xml.epp('xmlns' => XMLNS) do
         xml.command do
           xml.update do
-            xml.tag!('domain:update', 'xmlns:domain' => XMLNS_DOMAIN) do
+            xml.tag!('domain:update', 'xmlns:domain' => generate_path) do
               EppXml.generate_xml_from_hash(xml_params, xml, 'domain:')
             end
           end
@@ -87,7 +85,7 @@ class EppXml
       xml.epp('xmlns' => XMLNS) do
         xml.command do
           xml.transfer('op' => op) do
-            xml.tag!('domain:transfer', 'xmlns:domain' => XMLNS_DOMAIN) do
+            xml.tag!('domain:transfer', 'xmlns:domain' => generate_path) do
               EppXml.generate_xml_from_hash(xml_params, xml, 'domain:')
             end
           end
@@ -107,7 +105,7 @@ class EppXml
       xml.epp('xmlns' => XMLNS) do
         xml.command do
           xml.delete do
-            xml.tag!("domain:delete", 'xmlns:domain' => XMLNS_DOMAIN, 'verified' => verified_option) do
+            xml.tag!("domain:delete", 'xmlns:domain' => generate_path, 'verified' => verified_option) do
               EppXml.generate_xml_from_hash(xml_params, xml, 'domain:')
             end
           end
@@ -120,6 +118,13 @@ class EppXml
 
     private
 
+    def generate_path
+      # XMLNS_DOMAIN  = 'https://epp.tld.ee/schema/domain-eis-1.0.xsd'.freeze
+      prefix = schema_prefix || 'domain-eis'
+      version = schema_version || '1.0'
+      "https://epp.tld.ee/schema/#{prefix}-#{version}.xsd"
+    end
+
     def build(command, xml_params, custom_params)
       xml = Builder::XmlMarkup.new
 
@@ -127,7 +132,7 @@ class EppXml
       xml.epp('xmlns' => XMLNS) do
         xml.command do
           xml.tag!(command) do
-            xml.tag!("domain:#{command}", 'xmlns:domain' => XMLNS_DOMAIN) do
+            xml.tag!("domain:#{command}", 'xmlns:domain' => generate_path) do
               EppXml.generate_xml_from_hash(xml_params, xml, 'domain:')
             end
           end

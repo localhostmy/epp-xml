@@ -10,7 +10,10 @@ class EppXml
   include ClientTransactionId
 
   def domain
-    @cached_domain ||= EppXml::Domain.new(cl_trid: cl_trid, cl_trid_prefix: cl_trid_prefix, schema_path: schema_path)
+    @cached_domain ||= EppXml::Domain.new(cl_trid: cl_trid,
+                                          cl_trid_prefix: cl_trid_prefix,
+                                          schema_version: schema_version,
+                                          schema_prefix: schema_prefix)
   end
 
   def contact
