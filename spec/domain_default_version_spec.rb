@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe EppXml::Domain do
-  let(:epp_xml) { EppXml.new(cl_trid: 'ABC-12345', schema_version: '1.0', schema_prefix: 'domain-eis')}
+  let(:epp_xml) { EppXml.new(cl_trid: 'ABC-12345' )}
 
   it 'generates valid create xml' do
     expected = Nokogiri::XML('<?xml version="1.0" encoding="UTF-8" standalone="no"?>
