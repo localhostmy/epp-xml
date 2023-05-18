@@ -7,7 +7,7 @@ class EppXml
 		DEFAULT_SCHEMA_PREFIX = 'domain-eis'.freeze
 		DEFAULT_SCHEMA_VERSION = '1.0'.freeze
 
-    XMLNS         = 'https://epp.tld.ee/schema/epp-ee-1.0.xsd'.freeze
+    XMLNS         = 'urn:ietf:params:xml:ns:epp-1.0'.freeze
 
     XMLNS_SECDNS  = 'urn:ietf:params:xml:ns:secDNS-1.1'.freeze
 
@@ -125,7 +125,8 @@ class EppXml
       prefix = schema_prefix || DEFAULT_SCHEMA_PREFIX
       version = schema_version || DEFAULT_SCHEMA_VERSION
 
-      "https://epp.tld.ee/schema/#{prefix}-#{version}.xsd"
+      # "https://epp.tld.ee/schema/#{prefix}-#{version}.xsd"
+      "urn:ietf:params:xml:ns:domain-1.0"
     end
 
     def build(command, xml_params, custom_params)

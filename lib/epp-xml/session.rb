@@ -15,14 +15,17 @@ class EppXml
         },
         svcs: {
           _objURIs: [
-            { objURI: { value: 'https://epp.tld.ee/schema/domain-eis-1.0.xsd' } },
-            { objURI: { value: 'https://epp.tld.ee/schema/contact-ee-1.1.xsd' } },
-            { objURI: { value: 'urn:ietf:params:xml:ns:host-1.0' } },
-            { objURI: { value: 'urn:ietf:params:xml:ns:keyrelay-1.0' } }
+            { objURI: { value: 'urn:ietf:params:xml:ns:contact-1.0' } },
+            { objURI: { value: 'urn:ietf:params:xml:ns:domain-1.0' } },
+            { objURI: { value: 'urn:ietf:params:xml:ns:host-1.0' } }
+
           ],
           svcExtension: [
             { extURI: { value: 'urn:ietf:params:xml:ns:secDNS-1.1' } },
-            { extURI: { value: 'https://epp.tld.ee/schema/eis-1.0.xsd' } }
+            { extURI: { value: 'urn:ietf:params:xml:ns:rgp-1.0' } },
+            { extURI: { value: 'urn:ietf:params:xml:ns:idn-1.0' } },
+            { extURI: { value: 'urn:ietf:params:xml:ns:launch-1.0' } },
+            { extURI: { value: 'urn:ietf:params:xml:ns:fee-0.7' } }
           ]
         }
       }
@@ -33,7 +36,7 @@ class EppXml
 
       xml.instruct!(:xml, standalone: 'no')
       xml.epp(
-        'xmlns' => 'https://epp.tld.ee/schema/epp-ee-1.0.xsd'
+        'xmlns' => 'urn:ietf:params:xml:ns:epp-1.0'
       ) do
         xml.command do
           xml.login do
@@ -48,7 +51,7 @@ class EppXml
       xml = Builder::XmlMarkup.new
       xml.instruct!(:xml, standalone: 'no')
       xml.epp(
-        'xmlns' => 'https://epp.tld.ee/schema/epp-ee-1.0.xsd'
+        'xmlns' => 'urn:ietf:params:xml:ns:epp-1.0'
       ) do
         xml.command do
           xml.logout
@@ -67,11 +70,11 @@ class EppXml
       xml = Builder::XmlMarkup.new
 
       xml.instruct!(:xml, standalone: 'no')
-      xml.epp('xmlns' => 'https://epp.tld.ee/schema/epp-ee-1.0.xsd') do
+      xml.epp('xmlns' => 'urn:ietf:params:xml:ns:epp-1.0') do
         xml.command do
           EppXml.generate_xml_from_hash(xml_params, xml)
 
-          EppXml.custom_ext(xml, custom_params)
+          # EppXml.custom_ext(xml, custom_params)
           xml.clTRID(clTRID) if clTRID
         end
       end

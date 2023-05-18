@@ -31,7 +31,7 @@ class EppXml
       xml = Builder::XmlMarkup.new
 
       xml.instruct!(:xml, standalone: 'no')
-      xml.epp('xmlns' => 'https://epp.tld.ee/schema/epp-ee-1.0.xsd') do
+      xml.epp('xmlns' => 'urn:ietf:params:xml:ns:epp-1.0') do
         xml.command do
           xml.transfer('op' => op) do
             xml.tag!('contact:transfer', 'xmlns:contact' => generate_path) do
@@ -51,7 +51,7 @@ class EppXml
       xml = Builder::XmlMarkup.new
 
       xml.instruct!(:xml, standalone: 'no')
-      xml.epp('xmlns' => 'https://epp.tld.ee/schema/epp-ee-1.0.xsd') do
+      xml.epp('xmlns' => 'urn:ietf:params:xml:ns:epp-1.0') do
         xml.command do
           xml.tag!(command) do
             xml.tag!("contact:#{command}", 'xmlns:contact' => generate_path) do
