@@ -141,6 +141,7 @@ class EppXml
             end
           end
 
+          EppXml.check_fee_ext(xml, xml_params) if command == "check"
           EppXml.custom_ext(xml, custom_params)
           xml.clTRID(clTRID) if clTRID
         end

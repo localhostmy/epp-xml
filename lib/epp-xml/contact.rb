@@ -69,7 +69,8 @@ class EppXml
       prefix = schema_prefix || DEFAULT_SCHEMA_PREFIX
       version = schema_version || DEFAULT_SCHEMA_VERSION
 
-      "https://epp.tld.ee/schema/#{prefix}-#{version}.xsd"
+      # "https://epp.tld.ee/schema/#{prefix}-#{version}.xsd"
+      "urn:ietf:params:xml:ns:contact-1.0"
     end
   end
 end
