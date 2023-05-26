@@ -42,10 +42,7 @@ class EppXml
               EppXml.generate_xml_from_hash(dnssec_params, xml, 'secDNS:')
             end if dnssec_params.any?
 
-            xml.tag!('eis:extdata',
-              'xmlns:eis' => XMLNS_EIS) do
-              EppXml.generate_xml_from_hash(custom_params, xml, 'eis:')
-            end if custom_params.any?
+            build_custom_ext(xml, custom_params) if custom_params.any?
           end if dnssec_params.any? || custom_params.any?
 
           xml.clTRID(clTRID) if clTRID
@@ -70,10 +67,7 @@ class EppXml
               EppXml.generate_xml_from_hash(dnssec_params, xml, 'secDNS:')
             end
 
-            xml.tag!('eis:extdata',
-              'xmlns:eis' => XMLNS_EIS) do
-              EppXml.generate_xml_from_hash(custom_params, xml, 'eis:')
-            end if custom_params.any?
+            build_custom_ext(xml, custom_params) if custom_params.any?
           end if dnssec_params.any? || custom_params.any?
 
           xml.clTRID(clTRID) if clTRID
@@ -93,7 +87,7 @@ class EppXml
             end
           end
 
-          EppXml.custom_ext(xml, custom_params)
+          build_custom_ext(xml, custom_params) if custom_params.any?
           xml.clTRID(clTRID) if clTRID
         end
       end
@@ -113,7 +107,7 @@ class EppXml
             end
           end
 
-          EppXml.custom_ext(xml, custom_params)
+          build_custom_ext(xml, custom_params) if custom_params.any?
           xml.clTRID(clTRID) if clTRID
         end
       end
@@ -127,6 +121,24 @@ class EppXml
 
       # "https://epp.tld.ee/schema/#{prefix}-#{version}.xsd"
       "urn:ietf:params:xml:ns:domain-1.0"
+    end
+
+    def build_custom_ext(xml, custom_params)
+      custom_params.values.flatten!.each do |custom|
+        if custom.keys.include?(:fee)
+          custom[:fee].each do |k, v|
+            xml.tag!("fee:#{k}",
+            "xmlns:fee" => "urn:ietf:params:xml:ns:fee-0.7") do
+              EppXml.generate_xml_from_hash(v, xml, "fee:")
+            end
+          end
+        else
+          xml.tag!("eis:extdata",
+            "xmlns:eis" => XMLNS_EIS) do
+            EppXml.generate_xml_from_hash(custom, xml, "eis:")
+          end
+        end
+      end
     end
 
     def build(command, xml_params, custom_params)
