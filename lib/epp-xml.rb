@@ -84,7 +84,7 @@ class EppXml
                 custom_params = {
                   domain: {
                     name: { value: domain[:name][:value] },
-                    currency: { value: domain[:year] || "MYR" },
+                    currency: { value: domain[:currency] || "MYR" },
                     command: { value: action },
                     period: {
                       attrs: { unit: "y" },
