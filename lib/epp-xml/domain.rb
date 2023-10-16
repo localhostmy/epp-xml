@@ -93,16 +93,14 @@ class EppXml
       end
     end
 
-    def delete(xml_params = {}, custom_params = {}, verified = false)
+    def delete(xml_params = {}, custom_params = {})
       xml = Builder::XmlMarkup.new
-
-      verified_option = verified ?  verified : 'no'
 
       xml.instruct!(:xml, standalone: 'no')
       xml.epp('xmlns' => XMLNS) do
         xml.command do
           xml.delete do
-            xml.tag!("domain:delete", 'xmlns:domain' => generate_path, 'verified' => verified_option) do
+            xml.tag!("domain:delete", 'xmlns:domain' => generate_path) do
               EppXml.generate_xml_from_hash(xml_params, xml, 'domain:')
             end
           end
