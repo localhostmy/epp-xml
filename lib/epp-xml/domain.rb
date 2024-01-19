@@ -87,7 +87,9 @@ class EppXml
             end
           end
 
-          build_custom_ext(xml, custom_params) if custom_params.any?
+          xml.extension do
+            build_custom_ext(xml, custom_params)
+          end if custom_params.any?
           xml.clTRID(clTRID) if clTRID
         end
       end
