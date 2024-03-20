@@ -113,6 +113,26 @@ class EppXml
       end
     end
 
+    def restore(xml_params = {}, custom_params = {})
+      xml = Builder::XmlMarkup.new
+
+      xml.instruct!(:xml, standalone: 'no')
+      xml.epp('xmlns' => XMLNS) do
+        xml.command do
+          xml.update do
+            xml.tag!('domain:update', 'xmlns:domain' => generate_path) do
+              EppXml.generate_xml_from_hash(xml_params, xml, 'domain:')
+            end
+          end
+
+          xml.extension do
+            build_custom_ext(xml, custom_params)
+          end if custom_params.any?
+          xml.clTRID(clTRID) if clTRID
+        end
+      end
+    end
+
     private
 
     def generate_path
@@ -131,6 +151,14 @@ class EppXml
             "xmlns:fee" => "urn:ietf:params:xml:ns:fee-0.7") do
               EppXml.generate_xml_from_hash(v, xml, "fee:")
             end
+          end
+        elsif custom.keys.include?(:manual)
+          head = custom.dig(:manual, :head)
+          body = custom.dig(:manual, :body)
+
+          xml.tag!("#{head[:type]}:#{head[:op]}",
+            "xmlns:#{head[:type]}" => head[:xmlns]) do
+            EppXml.generate_xml_from_hash(body, xml, "#{head[:type]}:")
           end
         else
           xml.tag!("eis:extdata",

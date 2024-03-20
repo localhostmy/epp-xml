@@ -64,11 +64,21 @@ class EppXml
 
     def custom_ext(xml, custom_params)
       if custom_params.any?
-        xml.extension do
-          if custom_params.any?
-            xml.tag!('eis:extdata',
-                     'xmlns:eis' => 'https://epp.tld.ee/schema/eis-1.0.xsd') do
-              EppXml.generate_xml_from_hash(custom_params, xml, 'eis:')
+        if custom_params.keys.include?(:manual)
+          head = custom_params.dig(:manual, :head)
+          body = custom_params.dig(:manual, :body)
+
+          xml.tag!("#{head[:type]}:#{head[:op]}",
+            "xmlns:#{head[:type]}" => head[:xmlns]) do
+            EppXml.generate_xml_from_hash(body, xml, "#{head[:type]}:")
+          end
+        else
+          xml.extension do
+            if custom_params.any?
+              xml.tag!('eis:extdata',
+                      'xmlns:eis' => 'https://epp.tld.ee/schema/eis-1.0.xsd') do
+                EppXml.generate_xml_from_hash(custom_params, xml, 'eis:')
+              end
             end
           end
         end
