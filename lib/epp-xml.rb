@@ -85,28 +85,38 @@ class EppXml
       end
     end
 
-    def check_fee_ext(xml, xml_params)
+    def check_fee_ext(xml, xml_params, extra_params)
       domain_name = xml_params.values.flatten
+      command = extra_params.dig(:command, :value)
       xml.tag!('fee:check', 'xmlns:fee' => 'urn:ietf:params:xml:ns:fee-0.7') do
         if domain_name.is_a?(Array)
           domain_name.each do |domain|
-            %w[create renew transfer restore].each do |action|
-              custom_params = {
-                domain: {
-                  name: { value: domain[:name][:value] },
-                  currency: { value: domain[:currency] || "USD" },
-                  command: { value: action },
-                  period: {
-                    attrs: { unit: "y" },
-                    value: domain[:year]
-                  }
-                }
-              }
+            if command == "all"
+              %w[create renew transfer restore].each do |action|
+                custom_params = generate_fee_ext(domain, action)
+                EppXml.generate_xml_from_hash(custom_params, xml, 'fee:')
+              end
+            else
+              custom_params = generate_fee_ext(domain, command)
               EppXml.generate_xml_from_hash(custom_params, xml, 'fee:')
             end
           end
         end
       end
+    end
+
+    def generate_fee_ext(domain, command)
+      {
+        domain: {
+          name: { value: domain[:name][:value] },
+          currency: { value: domain[:currency] || "USD" },
+          command: { value: command },
+          period: {
+            attrs: { unit: "y" },
+            value: domain[:year]
+          }
+        }
+      }
     end
   end
 end

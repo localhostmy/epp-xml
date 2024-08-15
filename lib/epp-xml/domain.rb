@@ -184,7 +184,7 @@ class EppXml
           #EppXml.custom_ext(xml, custom_params)
           xml.extension do
             if command == "check"
-              EppXml.check_fee_ext(xml, xml_params)
+              EppXml.check_fee_ext(xml, xml_params, custom_params)
             elsif custom_params.any?
               build_custom_ext(xml, custom_params)
             end
